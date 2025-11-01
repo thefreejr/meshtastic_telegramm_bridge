@@ -1,0 +1,54 @@
+# MQTT Configuration
+mqtt:
+  host: "localhost"
+  port: 1883
+  username: null
+  password: null
+  use_tls: false
+  ca_cert: null
+  client_id: "meshtastic_telegram_bridge"
+  
+  # Meshtastic MQTT topics
+  topics:
+    subscribe:
+      - "msh/2/json/+/text"
+      - "msh/2/json/+/position"
+      - "msh/2/json/+/telemetry"
+      - "msh/2/json/+/nodeinfo"
+    publish: "msh/2/json/TX"
+
+# Telegram Configuration
+telegram:
+  token: "YOUR_TELEGRAM_BOT_TOKEN"
+  admin_ids:
+    - 123456789
+    - 987654321
+  allowed_chats: []  # Пустой массив = разрешены все
+  welcome_message: |
+    👋 Добро пожаловать в Meshtastic-Telegram мост!
+    
+    📡 **Команды:**
+    /start - Начать работу
+    /help - Помощь
+    /nodes - Список узлов
+    /stats - Статистика
+    /location - Отправить местоположение
+    
+    💡 Просто отправьте сообщение, и оно будет переслано в Mesh-сеть!
+
+# Bridge Configuration
+bridge:
+  message_format: "📱 {user}: {message}"  # Формат для сообщений из Telegram
+  max_message_length: 240
+  enable_position_sharing: true
+  log_level: "INFO"
+  
+# Database
+database:
+  url: "sqlite:///storage/database.db"
+  
+# Security
+security:
+  require_approval: false  # Требовать одобрение новых пользователей
+  blacklist: []
+

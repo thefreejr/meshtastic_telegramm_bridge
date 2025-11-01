@@ -1,0 +1,17 @@
+# Telegram
+python-telegram-bot>=20.7
+
+# MQTT
+paho-mqtt>=1.6.1
+
+# Database
+sqlalchemy>=2.0.0
+alembic>=1.12.0
+
+# Configuration
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# Utilities
+click>=8.1.0
+requests>=2.31.0
