@@ -23,6 +23,8 @@ services:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - ./mosquitto/data:/mosquitto/data
       - ./mosquitto/log:/mosquitto/log
+    entrypoint: /bin/sh
+    command: -c "mkdir -p /mosquitto/data /mosquitto/log && chown -R mosquitto:mosquitto /mosquitto/data /mosquitto/log && exec /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf"
     networks:
       - meshtastic-network
     restart: unless-stopped
