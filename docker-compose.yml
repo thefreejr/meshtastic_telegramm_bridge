@@ -1,10 +1,11 @@
-version: '3.8'
+
 
 services:
-  meshtastic-telegram-bridge:
+  mtb:
     build: .
     environment:
       - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - MQTT_HOST=mosquitto
     volumes:
       - ./config:/app/config
       - ./storage:/app/storage
@@ -21,7 +22,9 @@ services:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
       - mosquitto_data:/mosquitto/data
       - mosquitto_log:/mosquitto/log
+      - mosquitto_pwd:/mosquitto/config/password.conf
 
 volumes:
   mosquitto_data:
   mosquitto_log:
+  mosquitto_pwd:

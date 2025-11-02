@@ -1,5 +1,6 @@
 import logging
 import asyncio
+import os
 import yaml
 from typing import Dict, Any
 from datetime import datetime
@@ -12,6 +13,7 @@ from .models import Database
 class MeshtasticTelegramBridge:
     def __init__(self, config_path: str = "config/config.yaml"):
         self.config = self._load_config(config_path)
+        self._apply_environment_overrides()
         self._setup_logging()
         
         self.logger = logging.getLogger(__name__)
@@ -44,6 +46,22 @@ class MeshtasticTelegramBridge:
         except yaml.YAMLError as e:
             self.logger.error(f"Ошибка парсинга YAML: {e}")
             raise
+    
+    def _apply_environment_overrides(self):
+        """Применение переопределений из переменных окружения"""
+        # Переопределение Telegram токена из переменной окружения
+        telegram_token = os.getenv('TELEGRAM_TOKEN')
+        if telegram_token:
+            if 'telegram' not in self.config:
+                self.config['telegram'] = {}
+            self.config['telegram']['token'] = telegram_token
+        
+        # Переопределение MQTT host из переменной окружения (полезно для Docker)
+        mqtt_host = os.getenv('MQTT_HOST')
+        if mqtt_host:
+            if 'mqtt' not in self.config:
+                self.config['mqtt'] = {}
+            self.config['mqtt']['host'] = mqtt_host
     
     def _setup_logging(self):
         """Настройка логирования"""
