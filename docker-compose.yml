@@ -1,5 +1,4 @@
 
-
 services:
   mtb:
     build: .
@@ -13,18 +12,24 @@ services:
     restart: unless-stopped
     depends_on:
       - mosquitto
+    networks:
+      - meshtastic-network
 
   mosquitto:
     image: eclipse-mosquitto:2.0
     ports:
       - "1883:1883"
     volumes:
-      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - mosquitto_data:/mosquitto/data
       - mosquitto_log:/mosquitto/log
-      - mosquitto_pwd:/mosquitto/config/password.conf
+    networks:
+      - meshtastic-network
+
+networks:
+  meshtastic-network:
+    driver: bridge
 
 volumes:
   mosquitto_data:
   mosquitto_log:
-  mosquitto_pwd:
