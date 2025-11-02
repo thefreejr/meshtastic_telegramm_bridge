@@ -25,6 +25,7 @@ services:
       - ./mosquitto/log:/mosquitto/log
     networks:
       - meshtastic-network
+    restart: unless-stopped
 
 networks:
   meshtastic-network:
