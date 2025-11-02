@@ -21,15 +21,11 @@ services:
       - "1883:1883"
     volumes:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
-      - mosquitto_data:/mosquitto/data
-      - mosquitto_log:/mosquitto/log
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
     networks:
       - meshtastic-network
 
 networks:
   meshtastic-network:
     driver: bridge
-
-volumes:
-  mosquitto_data:
-  mosquitto_log:
