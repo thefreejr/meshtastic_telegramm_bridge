@@ -1,0 +1,132 @@
+{
+  "test_messages": {
+    "description": "Тестовые сообщения Meshtastic для отправки через MQTT Explorer",
+    "broker": "192.168.1.172:1883",
+    "username": "n1",
+    "password": "n1",
+    "messages": [
+      {
+        "name": "Текстовое сообщение",
+        "topic": "msh/2/json/!12345678/text",
+        "payload": {
+          "from": "!12345678",
+          "to": "^all",
+          "channel": 0,
+          "type": "sendtext",
+          "payload": {
+            "text": "Привет из MQTT Explorer! Тестовое сообщение."
+          },
+          "id": 1234567890,
+          "rxTime": 1698888888,
+          "rxSnr": 5.5,
+          "hopLimit": 3,
+          "wantAck": false
+        },
+        "notes": "Отправить на топик msh/2/json/!12345678/text (замените !12345678 на ID вашего узла)"
+      },
+      {
+        "name": "Позиционное сообщение",
+        "topic": "msh/2/json/!12345678/position",
+        "payload": {
+          "from": "!12345678",
+          "to": "^all",
+          "channel": 0,
+          "type": "position",
+          "payload": {
+            "latitude": 55.7558,
+            "longitude": 37.6173,
+            "altitude": 150,
+            "batteryLevel": 85,
+            "time": 1698888888
+          },
+          "id": 1234567891,
+          "rxTime": 1698888888,
+          "rxSnr": 5.5,
+          "hopLimit": 3,
+          "wantAck": false
+        },
+        "notes": "Москва: Красная площадь. Замените координаты на ваши."
+      },
+      {
+        "name": "Информация об узле (NodeInfo)",
+        "topic": "msh/2/json/!12345678/nodeinfo",
+        "payload": {
+          "from": "!12345678",
+          "to": "^all",
+          "channel": 0,
+          "type": "nodeinfo",
+          "payload": {
+            "user": {
+              "id": "!12345678",
+              "longName": "Тестовый Узел",
+              "shortName": "TEST",
+              "macaddr": "1234567890abcdef",
+              "hwModel": "TBEAM",
+              "role": 1
+            },
+            "num": 42,
+            "hasWifi": true,
+            "hasBluetooth": true,
+            "hasEthernet": false,
+            "role": 1
+          },
+          "id": 1234567892,
+          "rxTime": 1698888888,
+          "rxSnr": 5.5,
+          "hopLimit": 3,
+          "wantAck": false
+        },
+        "notes": "Информация об узле сети"
+      },
+      {
+        "name": "Телеметрия",
+        "topic": "msh/2/json/!12345678/telemetry",
+        "payload": {
+          "from": "!12345678",
+          "to": "^all",
+          "channel": 0,
+          "type": "telemetry",
+          "payload": {
+            "batteryLevel": 75,
+            "voltage": 4.2,
+            "channelUtilization": 0.15,
+            "airUtilTx": 0.25,
+            "temperature": 22.5,
+            "relativeHumidity": 45.0
+          },
+          "id": 1234567893,
+          "rxTime": 1698888888,
+          "rxSnr": 5.5,
+          "hopLimit": 3,
+          "wantAck": false
+        },
+        "notes": "Телеметрические данные узла"
+      },
+      {
+        "name": "Текстовое сообщение (упрощенный формат)",
+        "topic": "msh/2/json/!12345678/text",
+        "payload": {
+          "from": "!12345678",
+          "payload": {
+            "text": "Простое тестовое сообщение"
+          }
+        },
+        "notes": "Минимальный формат для текстового сообщения"
+      },
+      {
+        "name": "Позиция (упрощенный формат)",
+        "topic": "msh/2/json/!12345678/position",
+        "payload": {
+          "from": "!12345678",
+          "payload": {
+            "latitude": 55.7558,
+            "longitude": 37.6173,
+            "altitude": 120
+          }
+        },
+        "notes": "Минимальный формат для позиционного сообщения"
+      }
+    ]
+  }
+}
+

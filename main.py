@@ -5,13 +5,8 @@ Meshtastic-Telegram Bridge
 """
 
 import os
-import sys
-import asyncio
 
-# Добавление пути к src
-sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
-
-from bridge import MeshtasticTelegramBridge
+from src.bridge import MeshtasticTelegramBridge
 
 def main():
     """Основная функция"""

@@ -1,5 +1,6 @@
 import logging
 import asyncio
+import warnings
 from queue import Queue, Empty
 from telegram import Update, BotCommand
 from telegram.ext import (
@@ -8,6 +9,9 @@ from telegram.ext import (
 )
 from typing import Dict, Any, Callable, List, Optional
 from .models import User, Message, MeshNode
+
+# Подавляем предупреждение о JobQueue, так как используем альтернативный метод
+warnings.filterwarnings('ignore', message='.*JobQueue.*', category=UserWarning)
 
 class TelegramBot:
     def __init__(self, config: Dict[str, Any], database, message_queue: Optional[Queue] = None):
@@ -21,6 +25,9 @@ class TelegramBot:
         
         # Обработчики внешних сообщений
         self.message_handlers = []
+        
+        # Задача для обработки очереди сообщений (если job_queue недоступен)
+        self._queue_task = None
         
         # Регистрация команд
         self._register_handlers()
@@ -53,11 +60,23 @@ class TelegramBot:
             async def post_init_with_queue(application):
                 await self._set_commands(application)
                 # Инициализация job_queue для обработки очереди
-                application.job_queue.run_repeating(
-                    self._process_message_queue, 
-                    interval=1.0, 
-                    first=1.0
-                )
+                # Подавляем предупреждение PTBUserWarning при проверке job_queue
+                with warnings.catch_warnings():
+                    warnings.filterwarnings('ignore', message='.*JobQueue.*', category=UserWarning)
+                    try:
+                        job_queue = getattr(application, 'job_queue', None)
+                        if job_queue is not None:
+                            job_queue.run_repeating(
+                                self._process_message_queue, 
+                                interval=1.0, 
+                                first=1.0
+                            )
+                            return
+                    except (AttributeError, RuntimeError, TypeError):
+                        pass
+                
+                # Альтернативный способ: создаем asyncio task для обработки очереди
+                self._queue_task = asyncio.create_task(self._process_message_queue_loop())
             self.application.post_init = post_init_with_queue
     
     async def _set_commands(self, application):
@@ -71,7 +90,7 @@ class TelegramBot:
         ]
         await application.bot.set_my_commands(commands)
     
-    async def _process_message_queue(self, context: ContextTypes.DEFAULT_TYPE):
+    async def _process_message_queue(self, context: ContextTypes.DEFAULT_TYPE = None):
         """Обработка сообщений из очереди"""
         if not self.message_queue:
             return
@@ -90,6 +109,18 @@ class TelegramBot:
                     break
         except Exception as e:
             self.logger.error(f"Ошибка обработки очереди сообщений: {e}")
+    
+    async def _process_message_queue_loop(self):
+        """Цикл обработки очереди сообщений (альтернатива job_queue)"""
+        while True:
+            try:
+                await self._process_message_queue()
+                await asyncio.sleep(1.0)
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                self.logger.error(f"Ошибка в цикле обработки очереди: {e}")
+                await asyncio.sleep(1.0)
     
     async def _notify_admins(self, message: str):
         """Уведомление администраторов"""
