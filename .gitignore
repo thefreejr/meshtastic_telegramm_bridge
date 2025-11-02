@@ -45,6 +45,7 @@ storage/
 
 # Config (содержит чувствительные данные)
 config/config.yaml
+mosquitto/config/password.conf
 
 # Environment variables
 .env
